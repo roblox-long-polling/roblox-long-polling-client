@@ -1,0 +1,66 @@
+{
+  "name": "roblox-long-polling-client",
+  "tree": {
+    "$className": "DataModel",
+    "HttpService": {
+      "$className": "HttpService",
+      "$properties": {
+        "HttpEnabled": true
+      }
+    },
+    "Lighting": {
+      "$className": "Lighting",
+      "$properties": {
+        "Brightness": 2.0,
+        "Technology": "Voxel",
+        "Ambient": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Outlines": false,
+        "GlobalShadows": true
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "Source": {
+        "$path": "src"
+      }
+    },
+    "SoundService": {
+      "$className": "SoundService",
+      "$properties": {
+        "RespectFilteringEnabled": true
+      }
+    },
+    "Workspace": {
+      "$className": "Workspace",
+      "$properties": {
+        "FilteringEnabled": true
+      },
+      "Baseplate": {
+        "$className": "Part",
+        "$properties": {
+          "Position": [
+            0.0,
+            -10.0,
+            0.0
+          ],
+          "Anchored": true,
+          "Locked": true,
+          "Color": [
+            0.38823,
+            0.37254,
+            0.38823
+          ],
+          "Size": [
+            512.0,
+            20.0,
+            512.0
+          ]
+        }
+      }
+    }
+  }
+}
