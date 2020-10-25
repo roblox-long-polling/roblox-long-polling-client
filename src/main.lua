@@ -6,10 +6,10 @@ license MIT
 
 local Promise = require(script.Parent.Promise)
 local HttpService = game:GetService("HttpService")
-local Neturl = require(script.Parent.url)
+-- local Neturl = require(script.Parent.url)
 local EventEmitter = require(script.Parent.events)
 
-function table.assign(...)
+function tableAssign(...)
     local newTable = {}
     local arg = {...}
 
@@ -27,41 +27,37 @@ end
 local Constants = {}
 
 Constants['ConnectionOptions'] = {
-	url = 'http://127.0.0.1:5000/r',
+	url = 'http://127.0.0.1:5000/poll',
 	maxSockets = 2,
-	maxRequests = 500
+	maxRequests = 500,
 	refreshTime = 60 * 1000
 }
-
-local function createClass(object)
-	object.__index = object
-	object['new'] = function ()
-		local instance = {}
-		setmetatable(instance, object)
-
-		if instance.constructor ~= nil then instance.constructor(...) end
-
-		return instance
-	end
-end
 
 local Connection = {
 	sockets = {},
 	_lastRefresh = 0
 }
 
-Connection = EventEmitter.new(Connection)
+function Connection:new(options)
+	local instance = {}
 
-function Connection:constructor(options) 
-	self.options = table.assign({}, Constants['ConnectionOptions'], options)
-	self._remainingRequests = self.options.maxRequests
+	setmetatable(instance, self)
+	self.__index = self
+
+	instance.options = tableAssign({}, Constants['ConnectionOptions'], options)
+	instance._remainingRequests = instance.options.maxRequests
+
+	return instance
 end
+
+Connection = EventEmitter.new(Connection)
 
 function Connection:start()
 	self._interval()
 end
 
 function Connection:_interval()
+	print(self.getRemainingRequests())
 	if #self.sockets < self.options.maxSockets and self.getRemainingRequests() > 0 then
 		self._createSocket()
 	end
@@ -100,13 +96,13 @@ end
 
 function Connection:_sendRequest(data)
 	self.removeRemainingRequest()
-	if data == nil then data = {}
+	if data == nil then data = {} end
 
 	return HttpService.RequestAsync({
 		Url = self.options.url,
 		Method = 'POST',
 		Headers = {
-			'Content-Type' = 'application/json'
+			['Content-Type'] = 'application/json'
 		},
 		Body = HttpService:JSONEncode(data)
 	})
@@ -119,3 +115,5 @@ end
 function Connection:_getRate()
 	return self.getTimeUntilRefresh() / self.options.remainingRequests
 end
+
+return Connection
